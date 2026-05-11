@@ -7,7 +7,7 @@ export default function App() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/api/products")
+      .get("https://ecommere-app.onrender.com/api/products")
       .then((res) => {
         setProducts(res.data);
         setLoading(false);
