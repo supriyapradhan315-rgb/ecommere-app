@@ -2,123 +2,185 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function App() {
+
   const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
+
     axios
       .get("https://ecommere-app.onrender.com/api/products")
-      .then((res) => {
-        setProducts(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-        setLoading(false);
-      });
+      .then((res) => setProducts(res.data))
+      .catch((err) => console.log(err));
+
   }, []);
 
+  // ADD TO CART
+
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Navbar */}
-      <nav className="bg-black text-white px-6 py-4 flex items-center justify-between shadow-lg">
-        <h1 className="text-3xl font-extrabold tracking-wide">
+    <div>
+
+      {/* NAVBAR */}
+
+      <div className="navbar">
+
+        <div className="logo">
           NovaMart
-        </h1>
+        </div>
 
-        <div className="flex gap-8 text-lg">
-          <a href="#" className="hover:text-gray-300">
-            Home
-          </a>
+        <div className="nav-links">
+          <a href="#">Home</a>
+          <a href="#">Products</a>
 
-          <a href="#products" className="hover:text-gray-300">
-            Products
-          </a>
-
-          <a href="#" className="hover:text-gray-300">
-            Cart
+          <a href="#">
+            Cart ({cart.length})
           </a>
         </div>
-      </nav>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-r from-black to-gray-800 text-white text-center py-24 px-6">
-        <h2 className="text-6xl font-extrabold mb-6 leading-tight">
-          Discover Premium Fashion & Tech
-        </h2>
+      </div>
 
-        <p className="text-gray-300 text-xl max-w-2xl mx-auto">
-          Explore trending products, modern styles, and exclusive
-          collections designed for your lifestyle.
-        </p>
+      {/* HERO */}
 
-        <button className="mt-10 bg-white text-black px-10 py-4 rounded-full text-lg font-semibold hover:scale-105 transition duration-300 shadow-xl">
-          Shop Now
-        </button>
+      <section className="hero">
+
+        <div className="hero-left">
+
+          <span className="small-text">
+            LOCAL STORE ECOMMERCE
+          </span>
+
+          <h1>
+            Premium Shopping <br />
+            Experience
+          </h1>
+
+          <p>
+            Buy modern fashion, gadgets and premium
+            collections with fast delivery and beautiful UI.
+          </p>
+
+          <div className="hero-features">
+
+            <div>✔ Order Tracking</div>
+
+            <div>✔ User Reviews</div>
+
+            <div>✔ Customer Support</div>
+
+          </div>
+
+          <button className="hero-btn">
+            Shop Now
+          </button>
+
+        </div>
+
+        <div className="hero-right">
+
+          <img
+            src="https://images.unsplash.com/photo-1523275335684-37898b6baf30"
+            alt=""
+          />
+
+          <img
+            src="https://images.unsplash.com/photo-1542291026-7eec264c27ff"
+            alt=""
+          />
+
+        </div>
+
       </section>
 
-      {/* Products Section */}
-      <section
-        id="products"
-        className="max-w-7xl mx-auto px-6 py-16"
-      >
-        <div className="flex items-center justify-between mb-10">
-          <h2 className="text-4xl font-bold text-gray-800">
-            Featured Products
-          </h2>
+      {/* PRODUCTS */}
 
-          <input
-            type="text"
-            placeholder="Search products..."
-            className="border border-gray-300 rounded-xl px-4 py-2 w-64 outline-none focus:ring-2 focus:ring-black"
-          />
-        </div>
+      <div className="main-layout">
 
-        {loading ? (
-          <div className="text-center text-2xl font-semibold py-20">
-            Loading products...
+        <section className="products-section">
+
+          <div className="top-bar">
+
+            <h2>Featured Products</h2>
+
+            <input
+              type="text"
+              placeholder="Search products..."
+            />
+
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+
+          <div className="products-grid">
+
             {products.map((product) => (
+
               <div
                 key={product._id || product.id}
-                className="bg-white rounded-3xl shadow-lg overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition duration-300"
+                className="product-card"
               >
+
                 <img
                   src={
                     product.image ||
-                    "https://via.placeholder.com/400x300?text=Product"
+                    "https://via.placeholder.com/300"
                   }
                   alt={product.name}
-                  className="h-64 w-full object-cover"
                 />
 
-                <div className="p-5">
-                  <h3 className="text-2xl font-semibold text-gray-800">
+                <div className="product-details">
+
+                  <h3 className="product-name">
                     {product.name}
                   </h3>
 
-                  <p className="text-3xl font-bold text-black mt-3">
+                  <div className="rating">
+                    ⭐⭐⭐⭐⭐
+                  </div>
+
+                  <p className="product-price">
                     ₹{product.price}
                   </p>
 
-                  <button className="mt-6 w-full bg-black text-white py-3 rounded-xl hover:bg-gray-800 transition duration-300">
-                    Add To Cart
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+                  <div className="card-buttons">
 
-      {/* Footer */}
-      <footer className="bg-black text-white text-center py-8 mt-12">
-        <p className="text-lg">
-          © 2026 NovaMart. All rights reserved.
-        </p>
+                    <button
+                      className="add-btn"
+                      onClick={() => addToCart(product)}
+                    >
+                      Add To Cart
+                    </button>
+
+                    <button className="track-btn">
+                      Order Tracking
+                    </button>
+
+                    <button className="review-btn">
+                      User Reviews
+                    </button>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        </section>
+
+      </div>
+
+      {/* FOOTER */}
+
+      <footer className="footer">
+        © 2026 NovaMart. All rights reserved.
       </footer>
+
     </div>
   );
 }
